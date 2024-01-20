@@ -11,14 +11,14 @@ const char *get_node_name()
 }
 const char *get_node_type()
 {
-    return get_node_type_name(NODE_TYPE).c_str();
+    return get_node_type_name(NODE_TYPE);
 }
 
 CameraNode::CameraNode(const std::string &node_name, Type node_type) : Node(node_name, node_type)
 {
     add_port(0, "im", Port::Output, Port::Image);
     auto port = add_port(0, "path", Port::Input, Port::File);
-    port->set_value<std::string>("/home/lightx/lightx/assets/images");
+    port->set_value<std::string>("assets/images");
     m_build_widget();
 
     auto dir = port->get_value<std::string>();
