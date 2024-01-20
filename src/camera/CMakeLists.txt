@@ -6,6 +6,5 @@ foreach(file ${SRC})
     message(${file})
 endforeach()
 
-add_library(${PROJECT_NAME} SHARED ${SRC})
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBS} ${LIB_NODE})
+add_library(${PROJECT_NAME} SHARED ${SRC} ${THIRD_PARTY_INCLUDES})
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${LIBS} ${LIB_NODE})

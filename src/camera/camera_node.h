@@ -1,7 +1,8 @@
 #pragma once
 
 #include "node/node.h"
-#include "utils/image_utils.hpp"
+#include "utils/common.h"
+// #include "utils/image_utils.hpp"
 #include <iostream>
 #include <QImage>
 #include <filesystem>
@@ -9,13 +10,11 @@
 /// @brief 创建节点
 /// @param pos 坐标
 /// @return
-NODE_API Node *create_node();
-/// @brief 获取节点信息
-/// @return
-NODE_API NodeInfo *get_node_info();
-
-/// @brief 节点信息
-NodeInfo *NODE_INFO = new NodeInfo{"Camera", Node::CameraNode};
+NODE_API Node *create_node(QWidget *parent);
+NODE_API const char *get_node_name();
+NODE_API const char *get_node_type();
+static const Node::Type NODE_TYPE{Node::CameraNode};
+static const std::string &NODE_NAME{"Camera"};
 
 /// @brief 相机节点
 class CameraNode : public Node

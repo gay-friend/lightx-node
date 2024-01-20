@@ -1,13 +1,17 @@
 #include "camera_node.h"
 namespace fs = std::filesystem;
 
-Node *create_node()
+NODE_API Node *create_node(QWidget *parent)
 {
-    return new CameraNode(NODE_INFO->name, NODE_INFO->type);
+    return new CameraNode(NODE_NAME, NODE_TYPE);
 }
-NodeInfo *get_node_info()
+const char *get_node_name()
 {
-    return NODE_INFO;
+    return NODE_NAME.c_str();
+}
+const char *get_node_type()
+{
+    return get_node_type_name(NODE_TYPE).c_str();
 }
 
 CameraNode::CameraNode(const std::string &node_name, Type node_type) : Node(node_name, node_type)
@@ -52,8 +56,8 @@ void CameraNode::execute()
     }
     m_index = m_index >= m_image_files.size() ? 0 : m_index;
     auto filename = m_image_files[m_index];
-    auto mat = cv::imread(filename);
-    set_port_value(0, Port::Output, mat);
+    // auto mat = cv::imread(filename);
+    // set_port_value(0, Port::Output, mat);
     m_index++;
     std::cout << "CameraNode running..." << std::endl;
 }

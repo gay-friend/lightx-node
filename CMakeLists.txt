@@ -22,20 +22,22 @@ IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
 ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Windows")
 	MESSAGE(STATUS "current platform: Windows")
     set(BUILD_DIR ${ROOT}/../build/win/lib)
-    set(LIB_NODE ${ROOT}/../build/linux/node.dll)
-    file(GLOB_RECURSE LIBS LIBS ${THIRD_PARTY_DIR}/libs/win/*lib)
-ELSEIF (CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
-	MESSAGE(STATUS "current platform: FreeBSD")
-ELSE ()
-    MESSAGE(STATUS "other platform: ${CMAKE_SYSTEM_NAME}")
+    set(LIB_NODE ${ROOT}/../build/win/Debug/node.lib)
+    file(GLOB_RECURSE LIBS ${THIRD_PARTY_DIR}/libs/win/*lib)
 ENDIF(CMAKE_SYSTEM_NAME MATCHES "Linux")
+
+foreach(file ${LIBS})
+    message(${file})
+endforeach()
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${BUILD_DIR})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${BUILD_DIR})
 set(EXECUTABLE_OUTPUT_PATH ${BUILD_DIR})
+set(LIBRARY_OUTPUT_PATH ${BUILD_DIR})
+set(ARCHIVE_OUTPUT_DIRECTORY ${BUILD_DIR})
 
 include_directories(${PROJECT_SOURCE_DIR}/include) # 添加头文件
-include_directories(LIBS ${THIRD_PARTY_DIR}/include)
+include_directories(${THIRD_PARTY_DIR}/include)
 
 file(GLOB_RECURSE THIRD_PARTY_INCLUDES ${THIRD_PARTY_DIR}/include/*.h*)
 # foreach(file ${THIRD_PARTY_INCLUDES})
@@ -48,5 +50,10 @@ file(GLOB_RECURSE INCLUDES ${ROOT}/include/*.h*)
 # endforeach()
 
 include_directories(${PROJECT_SOURCE_DIR}/include) # 添加头文件
-include_directories(LIBS ${THIRD_PARTY_DIR}/include)
+include_directories(${THIRD_PARTY_DIR}/include)
 add_subdirectory(src)
+
+add_executable(main test/main.cpp test/utils.cpp include/utils/utils.h)
+target_link_libraries(main PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${LIBS})
+add_library(testnode SHARED test/testnode.cpp)
+target_link_libraries(testnode PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${LIBS} ${LIB_NODE})

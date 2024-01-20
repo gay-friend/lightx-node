@@ -11,17 +11,9 @@
 #include <nlohmann/json.hpp>
 
 #include "node/port.h"
-#include "utils/image_utils.hpp"
+#include "utils/uuid.hpp"
 
 using json = nlohmann::json;
-
-#ifndef NODE_API
-#if _WIN64
-#define NODE_API extern "C" __declspec(dllexport)
-#else
-#define NODE_API extern "C"
-#endif
-#endif
 
 class Node : public QWidget
 {
@@ -34,10 +26,10 @@ public:
     };
     enum STATE
     {
-        NORMAL,
-        RUNNING,
-        FINISHED,
-        ERROR
+        STATE_NORMAL,
+        STATE_RUNNING,
+        STATE_FINISHED,
+        STATE_ERROR
     };
 
     virtual void init() = 0;
@@ -93,7 +85,7 @@ public:
         return port->get_value<T>();
     }
 
-    STATE state{NORMAL};
+    STATE state{STATE_NORMAL};
     /// @brief 节点类型
     Type type;
     /// @brief 用户定义节点名字
@@ -114,12 +106,3 @@ protected:
 };
 
 std::string get_node_type_name(Node::Type type);
-
-/// @brief 节点信息
-typedef struct NodeInfo
-{
-    std::string name; // 节点名
-    Node::Type type;  // 节点类型
-} NodeInfo;
-typedef Node *(*func_create_node)();
-typedef NodeInfo *(*func_get_lib_name)();
