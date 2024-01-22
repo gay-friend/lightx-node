@@ -2,7 +2,7 @@
 
 #include "node/node.h"
 #include "utils/common.h"
-// #include "utils/image_utils.hpp"
+#include <opencv2/opencv.hpp>
 #include <iostream>
 #include <QImage>
 #include <filesystem>

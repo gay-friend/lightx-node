@@ -7,4 +7,4 @@ foreach(file ${SRC})
 endforeach()
 
 add_library(${PROJECT_NAME} SHARED ${SRC} ${THIRD_PARTY_INCLUDES} ${INCLUDES})
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${LIBS} ${LIB_NODE})
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${THRRD_PARTY_LIB} ${LIB_NODE})
