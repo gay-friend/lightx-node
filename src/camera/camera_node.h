@@ -31,4 +31,6 @@ public:
 private:
     std::vector<std::string> m_image_files;
     int m_index{0};
+    Port *m_im_port{nullptr};
+    Port *m_path_port{nullptr};
 };

@@ -1,2 +1,2 @@
-add_subdirectory(convert)
+add_subdirectory(cvt_color)
 add_subdirectory(threshold)

@@ -1,4 +1,4 @@
-set(PROJECT_NAME camera) #设置工程环境变量
+set(PROJECT_NAME camera${BUILD_FLAG}) #设置工程环境变量
 project(${PROJECT_NAME} VERSION 0.1) # 设置工程名称
 
 file(GLOB_RECURSE SRC *.h *.cpp)

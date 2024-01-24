@@ -48,11 +48,12 @@ endforeach()
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
-include_directories(${PROJECT_SOURCE_DIR}/include) # 添加头文件
+set(LIGHTX_INCLUD_DIR ${PROJECT_SOURCE_DIR}/../lightx/include)
+include_directories(${LIGHTX_INCLUD_DIR})
 include_directories(${THIRD_PARTY_DIR}/include)
 
 file(GLOB_RECURSE THIRD_PARTY_INCLUDES ${THIRD_PARTY_DIR}/include/*.h*)
-file(GLOB_RECURSE INCLUDES ${PROJECT_SOURCE_DIR}/include/*.h*)
+file(GLOB_RECURSE LIGHTX_INCLUDES ${LIGHTX_INCLUD_DIR}/node/*.h* ${LIGHTX_INCLUD_DIR}/utils/*.h*)
 
 add_subdirectory(src)
 
