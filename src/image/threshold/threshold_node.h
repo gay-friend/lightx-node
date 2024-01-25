@@ -1,19 +1,16 @@
 #pragma once
 
 #include "node/node.h"
+#include "utils/common.h"
 #include "utils/image_utils.hpp"
 #include <QImage>
 #include <iostream>
 
-/// @brief 创建节点
-/// @return
-NODE_API Node *create_node();
-/// @brief 获取节点信息
-/// @return
-NODE_API NodeInfo *get_node_info();
-
-/// @brief 节点信息
-NodeInfo *NODE_INFO = new NodeInfo{"Threshold", Node::CameraNode};
+NODE_API Node *create_node(QWidget *parent);
+NODE_API const char *get_node_name();
+NODE_API const char *get_node_type();
+static const Node::Type NODE_TYPE{Node::CameraNode};
+static const std::string &NODE_NAME{"Thresold"};
 
 class ThresholdNode : public Node
 {
@@ -27,4 +24,9 @@ public:
     virtual void init() override;
     /// @brief 反初始化
     virtual void uninit() override;
+
+protected:
+    Port *m_im_port{nullptr};
+    Port *m_res_port{nullptr};
+    Port *m_th_port{nullptr};
 };

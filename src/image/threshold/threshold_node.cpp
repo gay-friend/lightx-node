@@ -1,23 +1,24 @@
 #include "threshold_node.h"
 
-NodeInfo *get_node_info()
+NODE_API Node *create_node(QWidget *parent)
 {
-    return NODE_INFO;
+    return new ThresholdNode(NODE_NAME, NODE_TYPE);
 }
-Node *create_node()
+const char *get_node_name()
 {
-    return new ThresholdNode(NODE_INFO->name, NODE_INFO->type);
+    return NODE_NAME.c_str();
+}
+const char *get_node_type()
+{
+    return get_node_type_name(NODE_TYPE);
 }
 
 ThresholdNode::ThresholdNode(const std::string &node_name, Type node_type) : Node(node_name, node_type)
 {
 
-    add_pair_port(0, "im", Port::Image, true);
-    auto port = add_port(1, "th", Port::Input, Port::Int);
-    port->set_value(100);
-    std::cout << port->get_value<int>() << std::endl;
-
-    add_port(1, "out im", Port::Output, Port::Image);
+    this->m_im_port = add_pair_port(0, "图", Port::Image, true);
+    this->m_th_port = add_port(1, "阈值", Port::Input, Port::Int);
+    this->m_res_port = add_port(1, "二值化图", Port::Output, Port::Image);
     m_build_widget();
 }
 
@@ -30,9 +31,8 @@ void ThresholdNode::uninit()
 void ThresholdNode::execute()
 {
 
-    auto mat = get_port_value<cv::Mat>(0, Port::InputForce);
-    auto th = get_port_value<int>(1, Port::Input);
-    std::cout << get_port(1, Port::Input)->get_value<int>() << std::endl;
+    auto mat = this->m_im_port->get_value<cv::Mat>();
+    auto th = this->m_th_port->get_value<int>();
 
     if (mat.empty())
     {
@@ -43,7 +43,7 @@ void ThresholdNode::execute()
     cv::Mat gray;
     if (mat.type() == CV_8UC1)
     {
-        gray = mat;
+        gray = mat.clone();
     }
     else
     {
@@ -52,7 +52,5 @@ void ThresholdNode::execute()
 
     cv::Mat bin_mat;
     cv::threshold(gray, bin_mat, th, 255, cv::THRESH_BINARY);
-    set_port_value(1, Port::Output, bin_mat);
-
-    std::cout << "ThresholdNode running. th: " << th << std::endl;
+    this->m_res_port->set_value(bin_mat);
 }

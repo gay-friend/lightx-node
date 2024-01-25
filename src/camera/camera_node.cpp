@@ -17,11 +17,15 @@ const char *get_node_type()
 
 CameraNode::CameraNode(const std::string &node_name, Type node_type) : Node(node_name, node_type)
 {
-    this->m_im_port = add_port(0, "im", Port::Output, Port::Image);
-    this->m_path_port = add_port(0, "path", Port::Input, Port::File);
+    this->m_im_port = add_port(0, "图", Port::Output, Port::Image);
+    this->m_path_port = add_port(0, "路径", Port::Input, Port::File);
     m_build_widget();
-    this->m_path_port->set_value<std::string>("assets/images");
-
+    this->init();
+    QObject::connect(this->m_path_port, &Port::on_value_change, [this](QVariant *data)
+                     { this->init(); });
+}
+void CameraNode::init()
+{
     auto dir = this->m_path_port->get_value<std::string>();
     fs::path path(dir);
     if (!fs::exists(path))
@@ -38,9 +42,6 @@ CameraNode::CameraNode(const std::string &node_name, Type node_type) : Node(node
     {
         m_image_files.push_back(it.path().generic_string());
     }
-}
-void CameraNode::init()
-{
 }
 void CameraNode::uninit()
 {

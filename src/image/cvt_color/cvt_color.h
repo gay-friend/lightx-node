@@ -30,4 +30,7 @@ public:
 private:
     std::vector<std::string> m_image_files;
     int m_index{0};
+    Port *m_cv_type_port{nullptr};
+    Port *m_im_port{nullptr};
+    Port *m_res_port{nullptr};
 };

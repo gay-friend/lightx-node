@@ -15,10 +15,15 @@ const char *get_node_type()
 
 CvtColorNode::CvtColorNode(const std::string &node_name, Type node_type) : Node(node_name, node_type)
 {
-    add_pair_port(0, "im", Port::Image, true);
-    add_port(1, "res im", Port::Output, Port::Image);
-    auto port = add_port(1, "cvt type", Port::Input, Port::Enum);
-    port->set_combo_items({"BGR2RGB", "RGB2BGR", "BGR2GRAY", "RGB2GRAY", "GRAY2BGR", "GRAY2RGB"});
+    this->m_im_port = add_pair_port(0, "图", Port::Image, true);
+    this->m_res_port = add_port(1, "结果图", Port::Output, Port::Image);
+    std::vector<std::string> items = {"BGR2RGB",
+                                      "RGB2BGR",
+                                      "BGR2GRAY",
+                                      "RGB2GRAY",
+                                      "GRAY2BGR",
+                                      "GRAY2RGB"};
+    this->m_cv_type_port = add_port(1, "转换类型", Port::Input, Port::Enum, items);
     m_build_widget();
 }
 
@@ -30,8 +35,8 @@ void CvtColorNode::uninit()
 }
 void CvtColorNode::execute()
 {
-    auto mat = get_port_value<cv::Mat>(0, Port::InputForce);
-    auto cvt_type = get_port_value<std::string>(1, Port::Input);
+    auto mat = this->m_im_port->get_value<cv::Mat>();
+    auto cvt_type = this->m_cv_type_port->get_value<std::string>();
 
     cv::Mat res;
     auto cvt_color_type = cv::COLOR_BGR2GRAY;
@@ -61,7 +66,7 @@ void CvtColorNode::execute()
             if (mat.type() == CV_8UC1)
             {
                 res = mat.clone();
-                set_port_value(1, Port::Output, res);
+                this->m_res_port->set_value(res);
             }
             return;
         }
@@ -75,7 +80,7 @@ void CvtColorNode::execute()
             if (mat.type() == CV_8UC1)
             {
                 res = mat.clone();
-                set_port_value(1, Port::Output, res);
+                this->m_res_port->set_value(res);
             }
             return;
         }
@@ -102,7 +107,7 @@ void CvtColorNode::execute()
 
     cv::cvtColor(mat, res, cvt_color_type);
     // 输出灰度图
-    set_port_value(1, Port::Output, res);
+    this->m_res_port->set_value(res);
 
     std::cout << "CvtColorNode running..." << std::endl;
 }
